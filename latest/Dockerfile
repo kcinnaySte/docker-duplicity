@@ -30,8 +30,15 @@ RUN set -x \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
+RUN apk add --update bash && rm -rf /var/cache/apk/*
+
 VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
 USER duplicity
- 
-CMD ["duplicity"]
+
+WORKDIR /home/duplicity
+RUN mkdir .ssh
+
+COPY entrypoint.sh ./entrypoint.sh
+
+#ENTRYPOINT [ "./entrypoint.sh" ]
