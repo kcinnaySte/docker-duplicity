@@ -37,7 +37,7 @@ VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 USER duplicity
 
 WORKDIR /home/duplicity
-ENV PATH="/bin:${PATH}"
+RUN mkdir .ssh
 
 COPY entrypoint.sh ./entrypoint.sh
 
