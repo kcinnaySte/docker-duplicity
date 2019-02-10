@@ -1,5 +1,5 @@
 # Supported tags and respective `Dockerfile` links
-
+[![](https://images.microbadger.com/badges/image/kcinnayste/duplicity.svg)](https://microbadger.com/images/kcinnayste/duplicity "Get your own image badge on microbadger.com")
 
 # What is Duplicity?
 
@@ -30,9 +30,11 @@ In general you...
 
 Example of commands you may want to run **periodically to back up** with good clean-up/maintenance (see below for various storage options):
 
+```sh
      $ docker run --rm ... kcinnayste/duplicity --full-if-older-than=6M source_directory target_url
      $ docker run --rm ... kcinnayste/duplicity remove-older-than 6M --force target_url
      $ docker run --rm ... kcinnayste/duplicity cleanup --force target_url
+```
 
 This would do:
 
@@ -44,21 +46,28 @@ This would do:
 
 ### Backup via **SSH** example
 
-at the first
+at the first, you have to generate the SSH-Keys and add the Target to the **known_hosts**.
+```sh
+$ docker run --rm -it \
+          -v $PWD/sshParams/known_hosts:/home/duplicity/.ssh \
+          kcinnayste/duplicity \
+          --add-known-host example.com \
+          --generate-ssh-key
+```
 
 Supposing you've an **SSH** access to some machine, you can:
-
-    $ docker run --rm -it --user root \
+```sh
+    $ docker run --rm -it \
           -e PASSPHRASE=P4ssw0rd \
           -v $PWD/.cache:/home/duplicity/.cache/duplicity \
           -v $PWD/.gnupg:/home/duplicity/.gnupg \
           -v $PWD/sshParams/known_hosts:/home/duplicity/.ssh \
           -v /:/data:ro \
-          wernight/duplicity \
+          kcinnayste/duplicity \
           --full-if-older-than=6M --allow-source-mismatch \
           --rsync-options='-e "ssh -i /id_rsa"' \
           /data scp://user@example.com//some_dir
-
+```
 
 ## Alias
 
